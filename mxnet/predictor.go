@@ -83,7 +83,19 @@ func CreatePredictor(symbol []byte,
 
 	var handle C.PredictorHandle
 
-	success, err := C.MXPredCreate((*C.char)(unsafe.Pointer(&symbol[0])),
+	// No need to check the return value of the cgo call.
+	// According to the cgo manual, the returned `error` represents a C errno variable.
+	//	(refer to https://golang.org/cmd/cgo/, search "C errno variable as an error" to locate)
+	// However, according to the linux manual for `errno.h`:
+	// 	The value in errno is significant only when the return value of the
+	//  call indicated an error (i.e., -1 from most system calls; -1 or NULL
+	//  from most library functions); a function that succeeds is allowed to
+	//  change errno.  The value of errno is never set to zero by any system
+	//  call or library function.
+	//	(refer to http://man7.org/linux/man-pages/man3/errno.3.html)
+	// Thus, as long as the returend value of the C function indicates a success, the errno can be any value and is meaningless.
+	// As a result, we only need to check the returned success flag.
+	success := C.MXPredCreate((*C.char)(unsafe.Pointer(&symbol[0])),
 		unsafe.Pointer(&params[0]),
 		C.int(len(params)),
 		C.int(device.Type),
@@ -102,9 +114,6 @@ func CreatePredictor(symbol []byte,
 	}
 	C.free(unsafe.Pointer(keys))
 
-	if err != nil {
-		return nil, err
-	}
 	if success < 0 {
 		return nil, GetLastError()
 	}
@@ -153,7 +162,7 @@ func CreatePredictorPartial(symbol []byte,
 
 	var handle C.PredictorHandle
 
-	success, err := C.MXPredCreatePartialOut((*C.char)(unsafe.Pointer(&symbol[0])),
+	success := C.MXPredCreatePartialOut((*C.char)(unsafe.Pointer(&symbol[0])),
 		unsafe.Pointer(&params[0]),
 		C.int(len(params)),
 		C.int(device.Type),
@@ -174,9 +183,6 @@ func CreatePredictorPartial(symbol []byte,
 	}
 	C.free(unsafe.Pointer(keys))
 
-	if err != nil {
-		return nil, err
-	}
 	if success < 0 {
 		return nil, GetLastError()
 	}

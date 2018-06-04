@@ -15,8 +15,9 @@
 package main
 
 import (
-	"github.com/songtianyi/go-mxnet-predictor/mxnet"
 	"io/ioutil"
+
+	"github.com/hxhxhx88/go-mxnet-predictor/mxnet"
 )
 
 func main() {
@@ -35,9 +36,9 @@ func main() {
 	p, err := mxnet.CreatePredictor(symbol,
 		params,
 		mxnet.Device{mxnet.CPU_DEVICE, 0},
-		[]mxnet.InputNode {
-		    mxnet.InputNode { Key: "data", Shape: []uint32{1, 10} },
-		    mxnet.InputNode { Key: "softmax_label", Shape: []uint32{1, 10} },
+		[]mxnet.InputNode{
+			mxnet.InputNode{Key: "data", Shape: []uint32{1, 10}},
+			mxnet.InputNode{Key: "softmax_label", Shape: []uint32{1, 10}},
 		},
 	)
 	defer p.Free()

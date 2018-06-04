@@ -16,12 +16,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/anthonynsimon/bild/imgio"
-	"github.com/anthonynsimon/bild/transform"
-	"github.com/songtianyi/go-mxnet-predictor/mxnet"
-	"github.com/songtianyi/go-mxnet-predictor/utils"
 	"io/ioutil"
 	"sort"
+
+	"github.com/anthonynsimon/bild/imgio"
+	"github.com/anthonynsimon/bild/transform"
+	"github.com/hxhxhx88/go-mxnet-predictor/mxnet"
+	"github.com/hxhxhx88/go-mxnet-predictor/utils"
 )
 
 func main() {
